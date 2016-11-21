@@ -1,10 +1,10 @@
 # TokenlyPublisherBridge
 The “TokenlyPublisherBridge” server application allows Tokenly to publish media metadata to the Florincoin blockchain. This server application includes API endpoints to publish metadata, update/change metadata, removal of metadata from being listed in LibraryD, and the transfer of ownership from Tokenly and back to the original user.
 
-## Installation:
+## Installation
 Installation instructions will be provided later.
 
-## API Endpoints:
+## API Endpoints
 ### Add Media:
 `/add`: Adds a piece of Tokenly music metadata to the Florincoin blockchain via a transaction message. This method required JSON to be pushed to it in the following format:
 ```javascript
@@ -151,7 +151,7 @@ After processing the `/changeOwner` API endpoint will return a response as follo
 }
 ```
 
-## Config:
+## Config
 Info about the config file will be here.
 
 ## License
