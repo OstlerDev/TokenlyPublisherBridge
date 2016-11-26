@@ -120,6 +120,16 @@ function copyFile(source, target) {
 
 loadConfig();
 
+// Example message signing
+client.signMessage('FD6qwMcfpnsKmoL2kJSfp1czBMVicmkK1Q', 'TokenlyPublisherBridgeTestPublisher-FD6qwMcfpnsKmoL2kJSfp1czBMVicmkK1Q-1480201268', function(err, signature) {
+	if (err) console.log(err);
+	// Example message publishing
+	client.sendToAddress('FD6qwMcfpnsKmoL2kJSfp1czBMVicmkK1Q', 0.0001, "", "", '{"alexandria-publisher":{"name":"TokenlyPublisherBridgeTestPublisher","address":"FD6qwMcfpnsKmoL2kJSfp1czBMVicmkK1Q","timestamp":1480201268,"emailmd5":"","bitmessage":""},"signature":"' + signature + '"}', function(err, msg) {
+		if (err) console.log(err);
+		console.log('Tx: ' + msg);
+	});
+});
+
 app.listen(3200, function () {
 	console.log('TokenlyPublisherBridge listening on port 3200!');
 	log('info', 'Started up TokenlyPublisherBridge on port 3200');
