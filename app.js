@@ -12,6 +12,15 @@ var dbfile = __dirname + '/tpb.db';
 var exists = fs.existsSync(dbfile);
 var db = new sqlite3.Database(dbfile);
 
+// Include Florincoin RPC connection
+var florincoin = require('node-litecoin');
+var client = new florincoin.Client({
+     host: '127.0.0.1',
+     port: 18322,
+     user: 'florincoinrpc', 
+     pass: 'password'
+});
+
 db.serialize(function() {
 	if(!exists) {
 		// Create the logs table
