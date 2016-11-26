@@ -2,7 +2,19 @@
 The “TokenlyPublisherBridge” server application allows Tokenly to publish media metadata to the Florincoin blockchain. This server application includes API endpoints to publish metadata, update/change metadata, removal of metadata from being listed in LibraryD, and the transfer of ownership from Tokenly and back to the original user.
 
 ## Installation
-Installation instructions will be provided later.
+Install Node.js then run the following commands to download and install the TokenlyPublisherBridge api.
+```
+$ git clone https://github.com/Tokenly/TokenlyPublisherBridge.git
+$ cd TokenlyPublisherBridge
+$ npm install
+```
+
+# Usage
+## Running the Application
+To run the TokenlyPublisherBridge application just run the following command and keep it running using something like screen.
+```
+$ node app.js
+```
 
 ## API Endpoints
 ### Add Media:

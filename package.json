@@ -1,0 +1,25 @@
+{
+  "name": "TokenlyPublisherBridge",
+  "version": "1.0.0",
+  "description": "Publish media metadata to the Florincoin blockchain. This server application includes API endpoints to publish metadata, update/change metadata, removal of metadata from being listed in LibraryD, and the transfer of ownership from Tokenly and back to the original user.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OstlerDev/TokenlyPublisherBridge.git"
+  },
+  "author": "Skylar Ostler <me@skylarostler.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/OstlerDev/TokenlyPublisherBridge/issues"
+  },
+  "homepage": "https://github.com/OstlerDev/TokenlyPublisherBridge#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "request": "^2.72.0",
+    "sqlite3": "^3.1.4"
+  }
+}
