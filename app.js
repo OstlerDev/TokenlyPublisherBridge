@@ -2,8 +2,7 @@ var express = require('express');
 var request = require('request');
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
-var LibraryDJS = require('libraryd-npm');
-
+var LibraryDJS = require('librarydjs');
 var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -15,11 +14,10 @@ var exists = fs.existsSync(dbfile);
 var db = new sqlite3.Database(dbfile);
 
 // Include Florincoin RPC connection
-var LibraryDJS = require('librarydjs');
 var ldjs = new LibraryDJS({
      host: '127.0.0.1',
      port: 18322,
-     user: 'florincoinrpc', 
+     username: 'florincoinrpc', 
      password: 'password'
 });
 
@@ -37,7 +35,8 @@ db.serialize(function() {
 var settings;
 
 app.get('/', function (req, res) {
-	res.send('Hello World!');
+	res.status(403);
+	res.send("");
 });
 
 app.post('/add', function (req, res) {
@@ -52,10 +51,13 @@ app.post('/add', function (req, res) {
 
 		var oipArtifact = req.body.artifact;
 
-		ldjs.
-
-		res.status(200);
-		res.send(generateResponseMessage(true, "Successfully published to the Florincoin Blockchain"));
+		ldjs.publishArtifact(oipArtifact, function(response){
+			if (res.success)
+				res.status(200);
+			else
+				res.status(400);
+			res.send(response);
+		})
 	} else {
 		res.status(403);
 		res.send(generateResponseMessage(false, "Incorrect API Key"));

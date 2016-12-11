@@ -135,7 +135,7 @@ After processing the `/add` API endpoint will return a response as follows:
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
 	"message": "",		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
-	"txid": ['tx1', 'tx2', 'tx3', 'tx4', 'tx5'] # All of the transaction ID's from the multipart publish (if published in single part only 1 txid will be returned, however it will still be inside of an array)
+	"txid": 'tx1,tx2,tx3,tx4,tx5' # All of the transaction IDs from the multipart publish (if published in single part only 1 txid will be returned)
 }
 ```
 ### Edit Media:
@@ -166,7 +166,7 @@ After processing the `/edit` API endpoint will return a response as follows:
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
 	"message": "",		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
-	"txid": ['tx1', 'tx2', 'tx3', 'tx4', 'tx5'] # All of the transaction ID's from the multipart publish (if published in single part only 1 txid will be returned, however it will still be inside of an array)
+	"txid": 'tx1,tx2,tx3,tx4,tx5' # All of the transaction IDs from the multipart publish (if published in single part only 1 txid will be returned)
 }
 ```
 
