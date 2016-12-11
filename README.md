@@ -18,117 +18,157 @@ $ node app.js
 
 ## API Endpoints
 ### Add Media:
-`/add`: Adds a piece of Tokenly music metadata to the Florincoin blockchain via a transaction message. This method required JSON to be pushed to it in the following format:
+`/add`: Adds a piece of Tokenly music metadata to the Florincoin blockchain via a transaction message. This method required JSON to be pushed to it in the OIP-041 format:
 ```javascript
-{
-
+{  
+	"oip-041":{  
+		"artifact":{  
+			"publisher":"$PublisherAddress",
+			"timestamp":1234567890,
+			"type":"$ArtifactType",
+			"info":{  
+				"title":"$ArtifactTitle",
+				"description":"$ArtifactDescription",
+				"year":1234,
+				"extraInfo":{  
+					"artist":"$Creator",
+					"company":"$Distributor",
+					"composers":[  
+						"$Composer1",
+						"$Composer2"
+					],
+					"copyright":"",
+					"usageProhibitions":"",
+					"usageRights":"",
+					"tags":[  
+						"$ArtifactTag1",
+						"$ArtifactTag2"
+					]
+				}
+			},
+			"storage":{  
+				"network":"IPFS",
+				"location":"$IPFSAddress",
+				"files":[  
+					{  
+						"disallowBuy":true,
+						"dname":"$DisplayName",
+						"duration":123,
+						"fname":"$FileName",
+						"fsize":123,
+						"minPlay":"$minPlayPriceUSD",
+						"sugPlay":"$suggestedPlayPriceUSD",
+						"promo":"$CutForPromoterSales",
+						"retail":"$CutForPlatformSales",
+						"ptpFT":12,
+						"ptpDT":34,
+						"ptpDA":56,
+						"type":"$MediaType",
+						"tokenlyID":"$SongTokenlyID"
+					},
+					{  
+						"dissallowPlay":true,
+						"dname":"$DisplayName",
+						"duration":123,
+						"fname":"$FileName",
+						"fsize":123,
+						"minBuy":"$minBuyPriceUSD",
+						"sugBuy":"$suggestedBuyPriceUSD",
+						"promo":"$CutForPromoterSales",
+						"retail":"$CutForPlatformSales",
+						"type":"$MediaType",
+						"tokenlyID":"$SongTokenlyID"
+					},
+					{  
+						"dname":"$DisplayName",
+						"duration":123,
+						"fname":"$FileName",
+						"fsize":123,
+						"minPlay":"$minPlayPriceFiat",
+						"sugPlay":"$suggestedPlayPriceFiat",
+						"minBuy":"$minBuyPriceFiat",
+						"sugBuy":"$suggestedBuyPriceFiat",
+						"promo":"$CutForPromoterSales",
+						"retail":"$CutForPlatformSales",
+						"ptpFT":12,
+						"ptpDT":34,
+						"ptpDA":56,
+						"type":"$MediaType",
+						"tokenlyID":"$SongTokenlyID"
+					},
+					{  
+						"dname":"Cover Art",
+						"fname":"$CoverArtFilename",
+						"fsize":123,
+						"type":"coverArt",
+						"storage":{  
+							"network":"HTTP",
+							"location":"$ThumbnailURL"
+						}
+					}
+				]
+			},
+			"payment":{  
+				"fiat":"$fiat_id",
+				"scale":"1000:1",
+				"sugTip":[  
+					123,
+					123,
+					123
+				],
+				"tokens":{  
+					"btc":"$BitcoinAddress",
+					"early":"",
+					"mtmcollector":"",
+					"mtmproducer":"",
+					"happybirthdayep":"",
+					"ltbcoin":""
+				}
+			}
+		},
+		"signature":"$IPFSAddress-$PublisherAddress-$timestamp"
+	}
 }
 ```
 After processing the `/add` API endpoint will return a response as follows:
 ```javascript
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
-	"error": "",		# This variable will be filled in on errors.
-	"oip-data": {		# This contains the full artifact that was published to the add endpoint.
-		"oip-artifact-041": {
-			"publisher": "F97Tp8LYnw94CpXmAhqACXWTT36jyvLCWx",
-			"timestamp": 1470269387,
-			"type": "music",
-			"info": {
-				"title": "Happy Birthday EP",
-				"year": 2016,
-				"description": "this is the second organically grown, gluten free album released by Adam B. Levine - contact adam@tokenly.com with questions or comments or discuss collaborations.",
-				"extra-info": {
-					"artist": "Adam B. Levine",
-					"company": "",
-					"composers": "Adam B. Levine",
-					"copyright": "",
-					"tokenly_ID": "",
-					"usageProhibitions": "",
-					"usageRights": "",
-					"tags": [],
-					"files": [
-						{
-							"dname": "Skipping Stones",
-							"fame": "1 - Skipping Stones.mp3",
-							"fsize": 6515667,
-							"type": "album track",
-							"duration": 1533.603293,
-							"sugPlay": 100,
-							"minPlay": null,
-							"sugBuy": 750,
-							"minBuy": 500,
-							"promo": 10,
-							"retail": 15,
-							"ptpFT": 10,
-							"ptpDT": 20,
-							"ptpDA": 50
-						},
-						{
-							"dname": "Lessons",
-							"fame": "2 - Lessons with intro.mp3",
-							"fsize": 6515667,
-							"type": "album track",
-							"duration": 1231.155243,
-							"disallowPlay": 1,
-							"sugBuy": 750,
-							"minBuy": 500,
-							"promo": 10,
-							"retail": 15,
-							"ptpFT": 10,
-							"ptpDT": 20,
-							"ptpDA": 50
-						},
-						{
-							"dname": "Born to Roam",
-							"fame": "3 - Born to Roam.mp3",
-							"fsize": 6515667,
-							"type": "album track",
-							"duration": 2374.550714,
-							"sugPlay": 100,
-							"minPlay": 50,
-							"disallowBuy": 1,
-							"promo": 10,
-							"retail": 15,
-							"ptpFT": 10,
-							"ptpDT": 20,
-							"ptpDA": 50
-						},
-						{
-							"dname": "Cover Art",
-							"fname": "birthdayepFINAL.jpg",
-							"type": "coverArt",
-							"disallowBuy": 1
-						}
-					],
-					"file_network": "IPFS",
-					"file_location": "QmPukCZKeJD4KZFtstpvrguLaq94rsWfBxLU1QoZxvgRxA"
-				}
+	"message": "",		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
+	"txid": ['tx1', 'tx2', 'tx3', 'tx4', 'tx5'] # All of the transaction ID's from the multipart publish (if published in single part only 1 txid will be returned, however it will still be inside of an array)
+}
+```
+### Edit Media:
+`/edit`: The Edit Media endpoint accepts data in the OIP-041 Edit format (example below) along with data in the standard OIP-041 schema (same as `/add` but with an added `txid` field inside the data at `oip-041.artifact.txid`). It calculates what information is new and publish that to the Florincoin blockchain. Example OIP-041 Edit format:
+```javascript
+{
+	"oip-041":{
+		"edit":{
+			"txid":"96bad8e17f908da4c695c58b0f843a03928e338b361b3035ed16a864eafc31a2", # Original/Latest TXID
+			"timestamp":1234,
+			"add":{
+				"payment.tokens":"FREEBIEOFTHEWEEK:\"1\""
 			},
-			"payment": {
-				"fiat": "USD",
-				"tokens": {
-					"MTMCOLLECTOR": "",
-					"MTMPRODUCER": "",
-					"HAPPYBDAYEP": "",
-					"EARLY": "",
-					"LTBCOIN": "",
-					"BTC": "1GMMg2J5iUKnDf5PbRr9TcKV3R6KfUiB55"
-				}
-			}
+			"edit":{
+				"files[0].dname":"Throwing Stones",
+				"files[0].fname":"1 - Throwing Stones.mp3"
+			},
+			"remove":[
+				"tokens.LTBCOIN"
+			]
 		},
-		"signature": "H27r7UxUb8BozjEvV0v++nCyRI7S6yyroeKCJQpgU5NO3CP6FpXWs5kCxy8vhmMhbtpj/FMj+8s3+updw7g+bmE="
+		"signature":"<txid-hashofalledits-timestamp>"
 	}
 }
 ```
-### Update Media:
-`/update`: The Update Media endpoint accepts the same data as `/add` above. It however will decide what information is new and publish that to the Florincoin blockchain. Example input data:
+After processing the `/edit` API endpoint will return a response as follows:
 ```javascript
 {
-	
+	"success": true, 	# This variable is set dependant on if the API call was successful or not.
+	"message": "",		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
+	"txid": ['tx1', 'tx2', 'tx3', 'tx4', 'tx5'] # All of the transaction ID's from the multipart publish (if published in single part only 1 txid will be returned, however it will still be inside of an array)
 }
 ```
-The Update Media endpoint returns the same information as the `/add` endpoint above.
 
 ### Remove Media:
 `/remove`: Deactivates an artifact in LibraryD. This will cause the artifact to stop showing up in the browser, however it does NOT remove the previously published data from the blockchain. Any information previously published will be accessable for as long as Florincoin exists. This endpoint accepts data in the following format:
@@ -143,7 +183,7 @@ After processing the `/remove` API endpoint will return a response as follows:
 ```javascript
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
-	"error": ""			# This variable will be filled in on errors.
+	"message": ""		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
 }
 ```
 ### Transfer Ownership:
@@ -159,7 +199,7 @@ After processing the `/changeOwner` API endpoint will return a response as follo
 ```javascript
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
-	"error": ""			# This variable will be filled in on errors.
+	"message": ""		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
 }
 ```
 
