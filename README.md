@@ -69,7 +69,7 @@ request(options, function (error, response, body) {
 	if (!error && response.statusCode == 200) {
 		// Handle response code
 	} else {
-		callback(generateResponseMessage(false, "Request failed with status: " + response.statusCode + ", with error: " + error));
+		// Handle failure
 	}
 });
 ```
