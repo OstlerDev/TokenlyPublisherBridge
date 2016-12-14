@@ -192,8 +192,7 @@ After processing the `/add` API endpoint will return a response as follows:
 ```javascript
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
-	"message": "",		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
-	"txid": 'tx1,tx2,tx3,tx4,tx5' # All of the transaction IDs from the multipart publish (if published in single part only 1 txid will be returned)
+	"message": "tx1,tx2,tx3,tx4,tx5",		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
 }
 ```
 ### Edit Media:
@@ -249,8 +248,7 @@ After processing the `/edit` API endpoint will return a response as follows:
 ```javascript
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
-	"message": "",		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
-	"txid": 'tx1,tx2,tx3,tx4,tx5' # All of the transaction IDs from the multipart publish (if published in single part only 1 txid will be returned)
+	"message": "tx1,tx2,tx3,tx4,tx5",		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
 }
 ```
 
@@ -258,32 +256,31 @@ After processing the `/edit` API endpoint will return a response as follows:
 `/remove`: Deactivates an artifact in LibraryD. This will cause the artifact to stop showing up in the browser, however it does NOT remove the previously published data from the blockchain. Any information previously published will be accessable for as long as Florincoin exists. This endpoint accepts data in the following format:
 ```javascript
 {
-	"tokenlyID": "XXXXXXXXX", 						# The ID of the artifact to be unlisted.
+	"txid": "XXXXXXXXX", 							# The ID of the artifact to be unlisted.
  	"artifactTitle": "Happy Birthday EP",			# The artifact title is included as a further backup measure. It is suggested that in the frontend the user is forced to type in the artifact title to unlist (Similar to Github repository deletions)
- 	"APIKey": "j9189ijnf87yhja57287454fa659241454"	# The API Key from the config. Prevents unauthorized access.
 }
 ```
 After processing the `/remove` API endpoint will return a response as follows:
 ```javascript
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
-	"message": ""		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
+	"message": "txid"	# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
 }
 ```
+
 ### Transfer Ownership:
 `/changeOwner`: Changes the ownership of an artifact from Tokenly to the individual user. Once the user transfers it away from Tokenly the metadata should be updated Browser-side. Updating further metadata clientside lowers the risk of a private key getting leaked. The `changeOwner`	API accepts data in the following format:
 ```javascript
 {
- 	"tokenlyID": "XXXXXXXXX", 								 # The ID of the artifact to be transferred.
+ 	"txid": "XXXXXXXXX", 								 	 # The TXID of the artifact to be transferred.
  	"newOwnerAddress": "FLuiVU5iDQ4a6ztcpBLwBNjBisyY2DvUTV", # The Florincoin address that the artifact needs to be transferred to.
- 	"APIKey": "j9189ijnf87yhja57287454fa659241454"			 # The API Key from the config. Prevents unauthorized access.
 }
 ```
 After processing the `/changeOwner` API endpoint will return a response as follows:
 ```javascript
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
-	"message": ""		# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
+	"message": "txid"	# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
 }
 ```
 
