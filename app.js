@@ -64,10 +64,27 @@ app.post('/add', function (req, res) {
 	}
 });
 
-app.post('/update', function (req, res) {
+app.post('/edit', function (req, res) {
+	// Test API Key
 	if (req.body.api_key && req.body['api_key'] == settings['api_key']){
-		res.send('');
+		// Verify artifact data is there, if not, throw an error.
+		if (!req.body.artifact){
+			res.status(400);
+			res.send(generateResponseMessage(false, "No artifact data detected in POST"));
+			return;
+		}
+
+		var oipArtifact = req.body.artifact;
+
+		ldjs.editArtifact(oipArtifact, function(response){
+			if (res.success)
+				res.status(200);
+			else
+				res.status(400);
+			res.send(response);
+		})
 	} else {
+		res.status(403);
 		res.send(generateResponseMessage(false, "Incorrect API Key"));
 	}
 });
