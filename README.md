@@ -16,6 +16,64 @@ To run the TokenlyPublisherBridge application just run the following command and
 $ node app.js
 ```
 
+## Calling the API endpoint
+Each of the API endpoints require POST data. ALL API endpoints require an `api-key`. Please POST the following keys inside the body:
+```javascript
+{
+	"api-key": "j9189ijnf87yhja57287454fa659241454",
+	"artifact": OIP-041-Artifact # This is where you submit the main data outlined below to the endpoints.
+}
+```
+### Node.js Example:
+```javascript
+var request = require('request');
+var baseURL = 'https://api.alexandria.io/alexandria/v2/search';
+var options = {
+	method: 'POST',
+	headers: {},
+	url: baseURL,
+	body: JSON.stringify({
+		'api-key': 'j9189ijnf87yhja57287454fa659241454',
+		'artifact': {
+			"oip-041": {
+				"artifact": {
+					"publisher": "FD6qwMcfpnsKmoL2kJSfp1czBMVicmkK1Q",
+					"timestamp": 1481419390,
+					"type": "music",
+					"info": {
+						"title": "Test",
+						"description": "Test",
+						"year": "2016",
+						"extraInfo": {}
+					},
+					"storage":{
+					"network": "IPFS",
+					"location": "QmPukCZKeJD4KZFtstpvrguLaq94rsWfBxLU1QoZxvgRxA",
+					"files": [
+						{
+							"dname": "Skipping Stones",
+							"fame": "1 - Skipping Stones.mp3",
+							"fsize": 6515667,
+							"type": "album track",
+							"duration": 1533.603293
+						}
+					]},
+					"payment": {}
+				}
+			}
+		}
+	})
+};
+
+request(options, function (error, response, body) {
+	if (!error && response.statusCode == 200) {
+		// Handle response code
+	} else {
+		callback(generateResponseMessage(false, "Request failed with status: " + response.statusCode + ", with error: " + error));
+	}
+});
+```
+
 ## API Endpoints
 ### Add Media:
 `/add`: Adds a piece of Tokenly music metadata to the Florincoin blockchain via a transaction message. This method required JSON to be pushed to it in the OIP-041 format:
@@ -141,23 +199,49 @@ After processing the `/add` API endpoint will return a response as follows:
 ### Edit Media:
 `/edit`: The Edit Media endpoint accepts data in the OIP-041 Edit format (example below) along with data in the standard OIP-041 schema (same as `/add` but with an added `txid` field inside the data at `oip-041.artifact.txid`). It calculates what information is new and publish that to the Florincoin blockchain. Example OIP-041 Edit format:
 ```javascript
-{
-	"oip-041":{
-		"edit":{
-			"txid":"96bad8e17f908da4c695c58b0f843a03928e338b361b3035ed16a864eafc31a2", # Original/Latest TXID
-			"timestamp":1234,
-			"add":{
-				"payment.tokens":"FREEBIEOFTHEWEEK:\"1\""
-			},
-			"edit":{
-				"files[0].dname":"Throwing Stones",
-				"files[0].fname":"1 - Throwing Stones.mp3"
-			},
-			"remove":[
-				"tokens.LTBCOIN"
-			]
-		},
-		"signature":"<txid-hashofalledits-timestamp>"
+{  
+    "success":true,
+    "message":{  
+        "oip-041":{  
+            "edit":{  
+                "txid":"a449b0f6a601e503e7b4fdc0ada47f55a8b2f98feb2fdb044f7a92d971ff0456", # This is the TXID for the artifact we are editting
+                "timestamp":1481420001,
+                "patch":{  
+                    "add":[  
+                        {  
+                            "path":"/payment/tokens/mtcproducer",
+                            "value":""
+                        }
+                    ],
+                    "replace":[  
+                        {  
+                            "path":"/storage/files/3/fname",
+                            "value":"birthdayepFirst.jpg"
+                        },
+                        {  
+                            "path":"/storage/files/3/dname",
+                            "value":"Cover Art 2"
+                        },
+                        {  
+                            "path":"/info/title",
+                            "value":"Happy Birthday"
+                        },
+                        {  
+                            "path":"/timestamp",
+                            "value":1481420001
+                        }
+                    ],
+                    "remove":[  
+                        {  
+                            "path":"/payment/tokens/mtmproducer"
+                        },
+                        {  
+                            "path":"/storage/files/0/sugBuy"
+                        }
+                    ]
+                }
+            }
+        }
 	}
 }
 ```
