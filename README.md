@@ -9,6 +9,7 @@ $ cd TokenlyPublisherBridge
 $ npm install
 ```
 
+## Config
 Now that you have installed TokenlyPublisherBridge you need to fill in a config file. Duplicate the `settings.example.cfg` file and name it `settings.cfg`. Fill it all in. Below is an example:
 ```javascript
 {
@@ -296,9 +297,6 @@ After processing the `/changeOwner` API endpoint will return a response as follo
 	"message": "txid"	# This variable will be filled in on success. If success is false, `error` will be used instead of `message`.
 }
 ```
-
-## Config
-Info about the config file will be here.
 
 ## License
 This project will remain closed source until version 1.0 is completed. It will then be open sourced under the GNU GPL v3.0.
