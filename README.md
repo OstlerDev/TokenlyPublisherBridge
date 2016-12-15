@@ -283,7 +283,7 @@ After processing the `/remove` API endpoint will return a response as follows:
 ```
 
 ### Transfer Ownership:
-`/changeOwner`: Changes the ownership of an artifact from Tokenly to the individual user. Once the user transfers it away from Tokenly the metadata should be updated Browser-side. Updating further metadata clientside lowers the risk of a private key getting leaked. The `changeOwner`	API accepts data in the following format:
+`/transfer`: Changes the ownership of an artifact from Tokenly to the individual user. Once the user transfers it away from Tokenly the metadata should be updated Browser-side. Updating further metadata clientside lowers the risk of a private key getting leaked. The `transfer` API accepts data in the following format:
 ```javascript
 {
  	"txid": "XXXXXXXXX", 								 	 # The TXID of the artifact to be transferred.
@@ -291,7 +291,7 @@ After processing the `/remove` API endpoint will return a response as follows:
  	"newOwnerAddress": "FD6qwMcfpnsKmoL2kJSfp1czBMVicmkK1Q", # The Florincoin address that the artifact needs to be transferred to.
 }
 ```
-After processing the `/changeOwner` API endpoint will return a response as follows:
+After processing the `/transfer` API endpoint will return a response as follows:
 ```javascript
 {
 	"success": true, 	# This variable is set dependant on if the API call was successful or not.
