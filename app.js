@@ -228,23 +228,31 @@ app.post('/transfer', function (req, res) {
 		} else {
 			var oipArtifact = req.body.artifact;
 
-			oipArtifact = JSON.parse(oipArtifact);
-
-			oip.transferArtifact(oipArtifact.txid, oipArtifact.originalOwnerAddress, oipArtifact.newOwnerAddress, function(oipRes){
-				if (!sent){
-					try{
-						if (oipRes.success)
-							res.status(200);
-						else
-							res.status(400);
-
-						console.log(oipRes);
-						log("info", oipRes);
-
-						res.send(oipRes);
-					} catch(e) {}
+			if (typeof oipArtifact == "string"){
+				try {
+					oipArtifact = JSON.parse(oipArtifact);
+				} catch(e) {
+					status = 400;
+					response = generateResponseMessage(false, "You must submit valid JSON!");
 				}
-			})
+			}
+			if (!response){
+				oip.transferArtifact(oipArtifact.txid, oipArtifact.originalOwnerAddress, oipArtifact.newOwnerAddress, function(oipRes){
+					if (!sent){
+						try{
+							if (oipRes.success)
+								res.status(200);
+							else
+								res.status(400);
+
+							console.log(oipRes);
+							log("info", oipRes);
+
+							res.send(JSON.stringify(oipRes));
+						} catch(e) {}
+					}
+				})
+			}
 		}
 	} else {
 		status = 403;
