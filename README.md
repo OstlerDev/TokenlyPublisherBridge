@@ -1,18 +1,31 @@
 # TokenlyPublisherBridge
-The “TokenlyPublisherBridge” server application allows Tokenly to publish media metadata to the Florincoin blockchain. This server application includes API endpoints to publish metadata, update/change metadata, removal of metadata from being listed in LibraryD, and the transfer of ownership from Tokenly and back to the original user.
+The "TokenlyPublisherBridge" server application will allow Tokenly users to publish media with the Open Index Protocol to the Florincoin Blockchain.
 
 ## Installation
 Install Node.js then run the following commands to download and install the TokenlyPublisherBridge api.
-```
+```bash
 $ git clone https://github.com/Tokenly/TokenlyPublisherBridge.git
 $ cd TokenlyPublisherBridge
 $ npm install
 ```
 
+Now that you have installed TokenlyPublisherBridge you need to fill in a config file. Duplicate the `settings.example.cfg` file and name it `settings.cfg`. Fill it all in. Below is an example:
+```javascript
+{
+	"florincoin_username": "florincoin",
+	"florincoin_password": "password",
+	"florincoin_rpc_ip": "127.0.0.1",
+	"florincoin_rpc_port": "18322",
+	"api_key": "password",
+	"allow_ip": "127.0.0.1"
+}
+```
+*NOTE:* Please be aware that TokenlyPublisherBridge does not require you to specify the publisher address in the config as it will attempt to publish under the publisher address in the submitted artifacts. Please make sure that you register your publishers and have them available inside your local Florincoin node.
+
 # Usage
 ## Running the Application
 To run the TokenlyPublisherBridge application just run the following command and keep it running using something like screen.
-```
+```bash
 $ node app.js
 ```
 

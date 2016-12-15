@@ -2,7 +2,7 @@ var express = require('express');
 var request = require('request');
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
-var LibraryDJS = require('librarydjs');
+var oip041 = require('oip-npm');
 var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -14,12 +14,7 @@ var exists = fs.existsSync(dbfile);
 var db = new sqlite3.Database(dbfile);
 
 // Include Florincoin RPC connection
-var ldjs = new LibraryDJS({
-     host: '127.0.0.1',
-     port: 18322,
-     username: 'florincoinrpc', 
-     password: 'password'
-});
+var oip;
 
 db.serialize(function() {
 	if(!exists) {
@@ -40,61 +35,179 @@ app.get('/', function (req, res) {
 });
 
 app.post('/add', function (req, res) {
-	// Test API Key
-	if (req.body.api_key && req.body['api_key'] == settings['api_key']){
+	var response;
+	var status;
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	// Verify the IP is allowed
+	if (ip != settings.allow_ip){
+		status = 403;
+		response = generateResponseMessage(false, "IP Not Allowed");
+	}  // Test API Keys
+	else if (req.body.api_key && req.body['api_key'] == settings['api_key']){
 		// Verify artifact data is there, if not, throw an error.
 		if (!req.body.artifact){
-			res.status(400);
-			res.send(generateResponseMessage(false, "No artifact data detected in POST"));
-			return;
+			status = 400;
+			response = generateResponseMessage(false, "No artifact data detected in POST");
+		} else {
+			var oipArtifact = req.body.artifact;
+
+			oip.publishArtifact(oipArtifact, function(oipRes){
+				if (oipRes.success)
+					status = 200;
+				else
+					status = 400;
+				response = oipRes;
+			})
 		}
-
-		var oipArtifact = req.body.artifact;
-
-		ldjs.publishArtifact(oipArtifact, function(response){
-			if (res.success)
-				res.status(200);
-			else
-				res.status(400);
-			res.send(response);
-		})
 	} else {
-		res.status(403);
-		res.send(generateResponseMessage(false, "Incorrect API Key"));
+		status = 403;
+		response = generateResponseMessage(false, "Incorrect API Key");
 	}
+
+	// Check status
+	if(status == 403){
+		// Incorrect API key, log this.
+		log("warning", response, "IP: " + ip)
+	} else {
+		log("info", response);
+	}
+	
+	res.status(status)
+	console.log(response);
+
+	res.send(response);
 });
 
 app.post('/edit', function (req, res) {
-	// Test API Key
-	if (req.body.api_key && req.body['api_key'] == settings['api_key']){
+	var response;
+	var status;
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	// Verify the IP is allowed
+	if (ip != settings.allow_ip){
+		status = 403;
+		response = generateResponseMessage(false, "IP Not Allowed");
+	}  // Test API Keys
+	else if (req.body.api_key && req.body['api_key'] == settings['api_key']){
 		// Verify artifact data is there, if not, throw an error.
 		if (!req.body.artifact){
-			res.status(400);
-			res.send(generateResponseMessage(false, "No artifact data detected in POST"));
-			return;
+			status = 400;
+			response = generateResponseMessage(false, "No artifact data detected in POST");
+		} else {
+			var oipArtifact = req.body.artifact;
+
+			oip.editArtifact(oipArtifact, function(oipRes){
+				if (oipRes.success)
+					status = 200;
+				else
+					status = 400;
+				response = oipRes;
+			})
 		}
-
-		var oipArtifact = req.body.artifact;
-
-		ldjs.editArtifact(oipArtifact, function(response){
-			if (res.success)
-				res.status(200);
-			else
-				res.status(400);
-			res.send(response);
-		})
 	} else {
-		res.status(403);
-		res.send(generateResponseMessage(false, "Incorrect API Key"));
+		status = 403;
+		response = generateResponseMessage(false, "Incorrect API Key");
 	}
+
+	// Check status
+	if(status == 403){
+		// Incorrect API key, log this.
+		log("warning", response, "IP: " + ip)
+	} else {
+		log("info", response);
+	}
+	
+	res.status(status)
+	console.log(response);
+
+	res.send(response);
 });
 
 app.post('/remove', function (req, res) {
-	if (req.body.api_key && req.body['api_key'] == settings['api_key']){
-		res.send('');
+	var response;
+	var status;
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	// Verify the IP is allowed
+	if (ip != settings.allow_ip){
+		status = 403;
+		response = generateResponseMessage(false, "IP Not Allowed");
+	}  // Test API Keys
+	else if (req.body.api_key && req.body['api_key'] == settings['api_key']){
+		// Verify artifact data is there, if not, throw an error.
+		if (!req.body.artifact){
+			status = 400;
+			response = generateResponseMessage(false, "No artifact data detected in POST");
+		} else {
+			var oipArtifact = req.body.artifact;
+
+			oip.deactivateArtifact(oipArtifact, function(oipRes){
+				if (oipRes.success)
+					status = 200;
+				else
+					status = 400;
+				response = oipRes;
+			})
+		}
 	} else {
-		res.send(generateResponseMessage(false, "Incorrect API Key"));
+		status = 403;
+		response = generateResponseMessage(false, "Incorrect API Key");
 	}
+
+	// Check status
+	if(status == 403){
+		// Incorrect API key, log this.
+		log("warning", response, "IP: " + ip)
+	} else {
+		log("info", response);
+	}
+	
+	res.status(status)
+	console.log(response);
+
+	res.send(response);
+});
+
+app.post('/transfer', function (req, res) {
+	var response;
+	var status;
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	// Verify the IP is allowed
+	if (ip != settings.allow_ip){
+		status = 403;
+		response = generateResponseMessage(false, "IP Not Allowed");
+	}  // Test API Keys
+	else if (req.body.api_key && req.body['api_key'] == settings['api_key']){
+		// Verify artifact data is there, if not, throw an error.
+		if (!req.body.artifact){
+			status = 400;
+			response = generateResponseMessage(false, "No artifact data detected in POST");
+		} else {
+			var oipArtifact = req.body.artifact;
+
+			oip.transferArtifact(oipArtifact, function(oipRes){
+				if (oipRes.success)
+					status = 200;
+				else
+					status = 400;
+				response = oipRes;
+			})
+		}
+	} else {
+		status = 403;
+		response = generateResponseMessage(false, "Incorrect API Key");
+	}
+
+	// Check status
+	if(status == 403){
+		// Incorrect API key, log this.
+		log("warning", response, "IP: " + ip)
+	} else {
+		log("info", response);
+	}
+
+	res.status(status)
+	console.log(response);
+
+	res.send(response);
 });
 
 function log(type, message, extrainfo, table){
@@ -162,6 +275,14 @@ function generateResponseMessage(success, message) {
 }
 
 loadConfig();
+
+// Create oip-npm link
+oip = new oip041({
+     host: settings.florincoin_rpc_ip,
+     port: settings.florincoin_rpc_port,
+     username: settings.florincoin_username, 
+     password: settings.florincoin_password
+});
 
 /*
 // Example message signing
