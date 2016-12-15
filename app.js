@@ -37,9 +37,11 @@ app.get('/', function (req, res) {
 app.post('/add', function (req, res) {
 	var response;
 	var status;
-	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	var sent = false;
+	var ip = req.connection.remoteAddress;
 	// Verify the IP is allowed
 	if (ip != settings.allow_ip){
+		console.log(ip);
 		status = 403;
 		response = generateResponseMessage(false, "IP Not Allowed");
 	}  // Test API Keys
@@ -52,38 +54,53 @@ app.post('/add', function (req, res) {
 			var oipArtifact = req.body.artifact;
 
 			oip.publishArtifact(oipArtifact, function(oipRes){
-				if (oipRes.success)
-					status = 200;
-				else
-					status = 400;
-				response = oipRes;
+				if (!sent){
+					try{
+						if (oipRes.success)
+							res.status(200);
+						else
+							res.status(400);
+
+						console.log(oipRes);
+						log("info", oipRes);
+
+						res.send(oipRes);
+					} catch(e) {}
+				}
 			})
 		}
 	} else {
 		status = 403;
 		response = generateResponseMessage(false, "Incorrect API Key");
 	}
+	// This will check if there was an error/response before the callback and get it sent out.
+	if (response || status){
+		// Check status
+		if(status == 403){
+			// Incorrect API key, log this.
+			log("warning", response, "IP: " + ip)
+		} else {
+			log("info", response);
+		}
 
-	// Check status
-	if(status == 403){
-		// Incorrect API key, log this.
-		log("warning", response, "IP: " + ip)
-	} else {
-		log("info", response);
+		// Mark sent so we don't return twice.
+		sent = true;
+		
+		res.status(status)
+		console.log(response);
+
+		res.send(response);
 	}
-	
-	res.status(status)
-	console.log(response);
-
-	res.send(response);
 });
 
 app.post('/edit', function (req, res) {
 	var response;
 	var status;
-	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	var sent = false;
+	var ip = req.connection.remoteAddress;
 	// Verify the IP is allowed
 	if (ip != settings.allow_ip){
+		console.log(ip);
 		status = 403;
 		response = generateResponseMessage(false, "IP Not Allowed");
 	}  // Test API Keys
@@ -96,36 +113,49 @@ app.post('/edit', function (req, res) {
 			var oipArtifact = req.body.artifact;
 
 			oip.editArtifact(oipArtifact, function(oipRes){
-				if (oipRes.success)
-					status = 200;
-				else
-					status = 400;
-				response = oipRes;
+				if (!sent){
+					try{
+						if (oipRes.success)
+							res.status(200);
+						else
+							res.status(400);
+
+						console.log(oipRes);
+						log("info", oipRes);
+
+						res.send(oipRes);
+					} catch(e) {}
+				}
 			})
 		}
 	} else {
 		status = 403;
 		response = generateResponseMessage(false, "Incorrect API Key");
 	}
+	// This will check if there was an error/response before the callback and get it sent out.
+	if (response || status){
+		// Check status
+		if(status == 403){
+			// Incorrect API key, log this.
+			log("warning", response, "IP: " + ip)
+		} else {
+			log("info", response);
+		}
 
-	// Check status
-	if(status == 403){
-		// Incorrect API key, log this.
-		log("warning", response, "IP: " + ip)
-	} else {
-		log("info", response);
+		// Mark sent so we don't return twice.
+		sent = true;
+		
+		res.status(status)
+		console.log(response);
+
+		res.send(response);
 	}
-	
-	res.status(status)
-	console.log(response);
-
-	res.send(response);
 });
 
 app.post('/remove', function (req, res) {
 	var response;
 	var status;
-	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	var ip = req.connection.remoteAddress;
 	// Verify the IP is allowed
 	if (ip != settings.allow_ip){
 		status = 403;
@@ -139,12 +169,20 @@ app.post('/remove', function (req, res) {
 		} else {
 			var oipArtifact = req.body.artifact;
 
-			oip.deactivateArtifact(oipArtifact, function(oipRes){
-				if (oipRes.success)
-					status = 200;
-				else
-					status = 400;
-				response = oipRes;
+			oipArtifact = JSON.parse(oipArtifact);
+
+			oip.deactivateArtifact(oipArtifact.txid, oipArtifact.artifactTitle, function(oipRes){
+				try{
+					if (oipRes.success)
+						res.status(200);
+					else
+						res.status(400);
+
+					console.log(oipRes);
+					log("info", oipRes);
+
+					res.send(oipRes);
+				} catch(e) {}
 			})
 		}
 	} else {
@@ -152,26 +190,33 @@ app.post('/remove', function (req, res) {
 		response = generateResponseMessage(false, "Incorrect API Key");
 	}
 
-	// Check status
-	if(status == 403){
-		// Incorrect API key, log this.
-		log("warning", response, "IP: " + ip)
-	} else {
-		log("info", response);
-	}
-	
-	res.status(status)
-	console.log(response);
+	if (response || status){
+		// Check status
+		if(status == 403){
+			// Incorrect API key, log this.
+			log("warning", response, "IP: " + ip)
+		} else {
+			log("info", response);
+		}
 
-	res.send(response);
+		// Mark sent so we don't return twice.
+		sent = true;
+		
+		res.status(status)
+		console.log(response);
+
+		res.send(response);
+	}
 });
 
 app.post('/transfer', function (req, res) {
 	var response;
 	var status;
-	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	var sent = false;
+	var ip = req.connection.remoteAddress;
 	// Verify the IP is allowed
 	if (ip != settings.allow_ip){
+		console.log(ip);
 		status = 403;
 		response = generateResponseMessage(false, "IP Not Allowed");
 	}  // Test API Keys
@@ -183,31 +228,46 @@ app.post('/transfer', function (req, res) {
 		} else {
 			var oipArtifact = req.body.artifact;
 
-			oip.transferArtifact(oipArtifact, function(oipRes){
-				if (oipRes.success)
-					status = 200;
-				else
-					status = 400;
-				response = oipRes;
+			oipArtifact = JSON.parse(oipArtifact);
+
+			oip.transferArtifact(oipArtifact.txid, oipArtifact.originalOwnerAddress, oipArtifact.newOwnerAddress, function(oipRes){
+				if (!sent){
+					try{
+						if (oipRes.success)
+							res.status(200);
+						else
+							res.status(400);
+
+						console.log(oipRes);
+						log("info", oipRes);
+
+						res.send(oipRes);
+					} catch(e) {}
+				}
 			})
 		}
 	} else {
 		status = 403;
 		response = generateResponseMessage(false, "Incorrect API Key");
 	}
+	// This will check if there was an error/response before the callback and get it sent out.
+	if (response || status){
+		// Check status
+		if(status == 403){
+			// Incorrect API key, log this.
+			log("warning", response, "IP: " + ip)
+		} else {
+			log("info", response);
+		}
 
-	// Check status
-	if(status == 403){
-		// Incorrect API key, log this.
-		log("warning", response, "IP: " + ip)
-	} else {
-		log("info", response);
+		// Mark sent so we don't return twice.
+		sent = true;
+		
+		res.status(status)
+		console.log(response);
+
+		res.send(response);
 	}
-
-	res.status(status)
-	console.log(response);
-
-	res.send(response);
 });
 
 function log(type, message, extrainfo, table){

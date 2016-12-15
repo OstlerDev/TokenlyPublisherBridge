@@ -287,7 +287,8 @@ After processing the `/remove` API endpoint will return a response as follows:
 ```javascript
 {
  	"txid": "XXXXXXXXX", 								 	 # The TXID of the artifact to be transferred.
- 	"newOwnerAddress": "FLuiVU5iDQ4a6ztcpBLwBNjBisyY2DvUTV", # The Florincoin address that the artifact needs to be transferred to.
+ 	"originalOwnerAddress": "FLuiVU5iDQ4a6ztcpBLwBNjBisyY2DvUTV", # The Florincoin address that the artifact needs to be transferred to.
+ 	"newOwnerAddress": "FD6qwMcfpnsKmoL2kJSfp1czBMVicmkK1Q", # The Florincoin address that the artifact needs to be transferred to.
 }
 ```
 After processing the `/changeOwner` API endpoint will return a response as follows:

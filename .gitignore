@@ -1,3 +1,5 @@
 node_modules/
 settings.cfg
 tpb.db
+
+testJSON.js
