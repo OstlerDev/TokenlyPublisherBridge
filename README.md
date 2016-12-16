@@ -18,7 +18,8 @@ Now that you have installed TokenlyPublisherBridge you need to fill in a config 
 	"florincoin_rpc_ip": "127.0.0.1",
 	"florincoin_rpc_port": "18322",
 	"api_key": "password",
-	"allow_ip": "127.0.0.1"
+	"allow_ip": "127.0.0.1",
+    "datadir": "/var/data"
 }
 ```
 *NOTE:* Please be aware that TokenlyPublisherBridge does not require you to specify the publisher address in the config as it will attempt to publish under the publisher address in the submitted artifacts. Please make sure that you register your publishers and have them available inside your local Florincoin node.

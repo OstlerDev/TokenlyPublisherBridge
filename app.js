@@ -9,23 +9,26 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 var fs = require("fs");
-var dbfile = __dirname + '/tpb.db';
-var exists = fs.existsSync(dbfile);
-var db = new sqlite3.Database(dbfile);
+var db;
 
 // Include Florincoin RPC connection
 var oip;
+function initDb() {
+	var dbfile = (settings.datadir || __dirname) + '/tpb.db';
+	var exists = fs.existsSync(dbfile);
+	db = new sqlite3.Database(dbfile);
 
-db.serialize(function() {
-	if(!exists) {
-		try {
-			// Create the logs table
-			db.run("CREATE TABLE log (id INTEGER PRIMARY KEY NOT NULL, timestamp INTEGER NOT NULL, type VARCHAR NOT NULL, message VARCHAR NOT NULL, extrainfo VARCHAR);");
-		} catch (error) {
-			console.log("Error creating database tables.");
+	db.serialize(function() {
+		if(!exists) {
+			try {
+				// Create the logs table
+				db.run("CREATE TABLE log (id INTEGER PRIMARY KEY NOT NULL, timestamp INTEGER NOT NULL, type VARCHAR NOT NULL, message VARCHAR NOT NULL, extrainfo VARCHAR);");
+			} catch (error) {
+				console.log("Error creating database tables.");
+			}
 		}
-	}
-});
+	});
+}
 
 var settings;
 
@@ -343,6 +346,7 @@ function generateResponseMessage(success, message) {
 }
 
 loadConfig();
+initDb();
 
 // Create oip-npm link
 oip = new oip041({
