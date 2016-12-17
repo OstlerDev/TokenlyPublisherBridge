@@ -43,7 +43,7 @@ app.post('/add', function (req, res) {
 	var sent = false;
 	var ip = req.connection.remoteAddress;
 	// Verify the IP is allowed
-	if (ip != settings.allow_ip){
+	if (settings.allow_ip != '*' && ip != settings.allow_ip){
 		console.log(ip);
 		status = 403;
 		response = generateResponseMessage(false, "IP Not Allowed");
@@ -102,7 +102,7 @@ app.post('/edit', function (req, res) {
 	var sent = false;
 	var ip = req.connection.remoteAddress;
 	// Verify the IP is allowed
-	if (ip != settings.allow_ip){
+	if (settings.allow_ip != '*' && ip != settings.allow_ip){
 		console.log(ip);
 		status = 403;
 		response = generateResponseMessage(false, "IP Not Allowed");
@@ -160,7 +160,7 @@ app.post('/remove', function (req, res) {
 	var status;
 	var ip = req.connection.remoteAddress;
 	// Verify the IP is allowed
-	if (ip != settings.allow_ip){
+	if (settings.allow_ip != '*' && ip != settings.allow_ip){
 		status = 403;
 		response = generateResponseMessage(false, "IP Not Allowed");
 	}  // Test API Keys
@@ -218,7 +218,7 @@ app.post('/transfer', function (req, res) {
 	var sent = false;
 	var ip = req.connection.remoteAddress;
 	// Verify the IP is allowed
-	if (ip != settings.allow_ip){
+	if (settings.allow_ip != '*' && ip != settings.allow_ip){
 		console.log(ip);
 		status = 403;
 		response = generateResponseMessage(false, "IP Not Allowed");
